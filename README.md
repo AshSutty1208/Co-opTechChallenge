@@ -3,7 +3,9 @@
 ## App Requirements:
 
 Version: 23+
+
 Requires Internet
+
 Uses Jetpack Compose
 
 ## How to use:
