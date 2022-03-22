@@ -3,18 +3,18 @@
     package="com.sutton.jokeapp">
 
     <application
-        android:name=".MainApplication"
+        android:name="com.trackage.app.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JokeApp">
+        android:theme="@style/Theme.Trackage">
         <activity
-            android:name=".MainActivity"
+            android:name="com.trackage.app.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.JokeApp.NoActionBar">
+            android:theme="@style/Theme.Trackage.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,10 +23,10 @@
         </activity>
 
         <activity
-            android:name=".ui.character_change.CharacterChangeActivity"
+            android:name="com.trackage.app.ui.character_change.CharacterChangeActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.JokeApp.NoActionBar">
+            android:theme="@style/Theme.Trackage.NoActionBar">
         </activity>
     </application>
 

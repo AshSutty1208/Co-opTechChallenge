@@ -6,6 +6,6 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "Joke App"
+rootProject.name = "Trackage"
 include ':app'
-include ':app:joke_api'
+include ':app:TrackageApi'
