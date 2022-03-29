@@ -11,9 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trackage">
         <activity
-            android:name="com.trackage.app.LoginActivity"
+            android:name="com.trackage.app.ui.login.LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Trackage.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +24,25 @@
         <activity
             android:name="com.trackage.app.ui.character_change.CharacterChangeActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:theme="@style/Theme.Trackage.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.sign_up.SignUpActivity"
+            android:exported="true"
             android:theme="@style/Theme.Trackage.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.home.HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Trackage.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.profile.ProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Trackage.Light.NoActionBar">
         </activity>
     </application>
 

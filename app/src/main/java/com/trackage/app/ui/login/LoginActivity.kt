@@ -1,4 +1,4 @@
-package com.trackage.app
+package com.trackage.app.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -16,9 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,8 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sutton.jokeapp.R
 import com.trackage.app.ui.MainViewModel
-import com.trackage.app.ui.character_change.CharacterChangeActivity
+import com.trackage.app.ui.custom.TrackageButton
 import com.trackage.app.ui.custom.TrackageTextViewHeader
+import com.trackage.app.ui.home.HomeActivity
+import com.trackage.app.ui.sign_up.SignUpActivity
 import com.trackage.app.ui.theme.AppTheme
 import com.trackage.app.ui.theme.TrackagePrimary
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +44,11 @@ class LoginActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     val dialogState by viewModel.dialogState.observeAsState()
 
-                    LoginUIContainer()
+                    LoginUIContainer(onSignInButtonClick = {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    }, onSignUpButtonClick = {
+                        startActivity(Intent(this, SignUpActivity::class.java))
+                    })
 
                     if (dialogState == true) {
                         JokeDialog(
@@ -63,7 +65,11 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginUIContainer() {
+fun LoginUIContainer(onSignInButtonClick: () -> Unit,
+                     onSignUpButtonClick: () -> Unit) {
+    var emailAddressText by remember { mutableStateOf("") }
+    var passwordText by remember { mutableStateOf("") }
+
     Column {
         //Trackage Logo
         Row(
@@ -90,13 +96,23 @@ fun LoginUIContainer() {
         }
 
         // Email Input
-        Row(Modifier.fillMaxWidth()) {
-            LoginEmailContainer(onValueChange = {})
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(value = emailAddressText,
+                onValueChange = { emailAddressText = it },
+                label = { Text("Email Address") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email)
+            )
         }
 
         //Password Input
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp)) {
-            LoginPasswordContainer(onValueChange = {})
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(value = passwordText,
+                onValueChange = { passwordText = it },
+                label = { Text("Password") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password)
+            )
         }
 
         //Login Buttons
@@ -104,13 +120,11 @@ fun LoginUIContainer() {
             Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.background)
-                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = {}) {
-                    Text(text = stringResource(R.string.sign_in))
-                }
+                TrackageButton(stringResource(R.string.sign_in), onClickListener = onSignInButtonClick)
             }
         }
 
@@ -121,36 +135,12 @@ fun LoginUIContainer() {
                 .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = {}) {
-                    Text(text = stringResource(R.string.sign_up))
-                }
+            Box(contentAlignment = Alignment.Center, modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)) {
+                TrackageButton(stringResource(R.string.sign_up), onClickListener = onSignUpButtonClick, true)
             }
         }
-    }
-}
-
-@Composable
-fun LoginEmailContainer(onValueChange: (String) -> Unit) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(value = "",
-            onValueChange = onValueChange,
-            label = { Text("Email Address") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email)
-        )
-    }
-}
-
-@Composable
-fun LoginPasswordContainer(onValueChange: (String) -> Unit) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(value = "",
-            onValueChange = onValueChange,
-            label = { Text("Password") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password)
-        )
     }
 }
 
@@ -201,26 +191,10 @@ fun JokeDialog(dialogText: String,
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewEmailInput() {
-    AppTheme {
-        LoginEmailContainer(onValueChange = {})
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPasswordInput() {
-    AppTheme {
-        LoginPasswordContainer(onValueChange = {})
-    }
-}
-
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        LoginUIContainer()
+        LoginUIContainer({}, {})
     }
 }
