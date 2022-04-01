@@ -3,7 +3,7 @@ package com.trackage.app.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trackage.app.trackage_api.repository.JokesRepository
+import com.trackage.app.trackage_api.repository.TrackageRepository
 import com.trackage.app.trackage_api.utils.Resource
 import com.trackage.app.util.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val jokesRepository: JokesRepository,
+class MainViewModel @Inject constructor(private val trackageRepository: TrackageRepository,
                                         private val dispatcher: DispatcherProvider
 ) : ViewModel() {
     var dialogState = MutableLiveData(false)
@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(private val jokesRepository: JokesReposi
     fun fetchRandomJoke() {
         viewModelScope.launch {
             withContext(dispatcher.io()) {
-                val response = jokesRepository.getRandomJoke()
+                val response = trackageRepository.getRandomJoke()
 
                 withContext(dispatcher.main()) {
                     when(response.status) {

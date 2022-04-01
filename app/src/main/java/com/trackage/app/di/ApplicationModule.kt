@@ -2,9 +2,9 @@ package com.trackage.app.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.trackage.app.trackage_api.data.remote.JokeRemoteDataSource
-import com.trackage.app.trackage_api.remote.JokeService
-import com.trackage.app.trackage_api.repository.JokesRepository
+import com.trackage.app.trackage_api.remote.TrackageRemoteDataSource
+import com.trackage.app.trackage_api.remote.TrackageService
+import com.trackage.app.trackage_api.repository.TrackageRepository
 import com.trackage.app.util.DefaultDispatcherProvider
 import com.trackage.app.util.DispatcherProvider
 import dagger.Module
@@ -35,15 +35,15 @@ object ApplicationModule {
     fun provideGson(): Gson = GsonBuilder().create()
 
     @Provides
-    fun provideJokeService(retrofit: Retrofit): JokeService = retrofit.create(JokeService::class.java)
+    fun provideJokeService(retrofit: Retrofit): TrackageService = retrofit.create(TrackageService::class.java)
 
     @Singleton
     @Provides
-    fun provideJokeRemoteDataSource(jokeService: JokeService) = JokeRemoteDataSource(jokeService)
+    fun provideJokeRemoteDataSource(trackageService: TrackageService) = TrackageRemoteDataSource(trackageService)
 
     @Singleton
     @Provides
-    fun provideRepository(remoteDataSource: JokeRemoteDataSource) = JokesRepository(remoteDataSource)
+    fun provideRepository(remoteDataSource: TrackageRemoteDataSource) = TrackageRepository(remoteDataSource)
 
     @Singleton
     @Provides

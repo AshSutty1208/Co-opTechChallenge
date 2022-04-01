@@ -4,7 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trackage.app.trackage_api.repository.JokesRepository
+import com.trackage.app.trackage_api.repository.TrackageRepository
 import com.trackage.app.trackage_api.utils.Resource
 import com.trackage.app.util.DispatcherProvider
 import com.trackage.app.util.containsOnlyLetters
@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class CharacterChangeViewModel @Inject constructor(private val jokesRepository: JokesRepository,
+class CharacterChangeViewModel @Inject constructor(private val trackageRepository: TrackageRepository,
                                                    private val dispatcher: DispatcherProvider
 ) : ViewModel() {
     var characterTextValue = MutableLiveData("")
@@ -45,7 +45,7 @@ class CharacterChangeViewModel @Inject constructor(private val jokesRepository: 
 
         viewModelScope.launch {
             withContext(dispatcher.io()) {
-                val response = jokesRepository.getRandomJoke(textInputSplit[0], textInputSplit[1])
+                val response = trackageRepository.getRandomJoke(textInputSplit[0], textInputSplit[1])
 
                 withContext(dispatcher.main()) {
                     when (response.status) {

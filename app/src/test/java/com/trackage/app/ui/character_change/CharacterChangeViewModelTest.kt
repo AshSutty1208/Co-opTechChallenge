@@ -3,7 +3,7 @@ package com.trackage.app.ui.character_change
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.trackage.app.trackage_api.models.Joke
 import com.trackage.app.trackage_api.models.SingleJoke
-import com.trackage.app.trackage_api.repository.JokesRepository
+import com.trackage.app.trackage_api.repository.TrackageRepository
 import com.trackage.app.trackage_api.utils.Resource
 import com.trackage.app.CoroutineTestRule
 import com.trackage.app.util.splitBySpace
@@ -31,7 +31,7 @@ class CharacterChangeViewModelTest {
     @JvmField
     val coroutineTestRule = CoroutineTestRule()
 
-    private val mockRepository = mock(JokesRepository::class.java)
+    private val mockRepository = mock(TrackageRepository::class.java)
 
     private val viewModel = CharacterChangeViewModel(mockRepository,
         coroutineTestRule.testDispatcherProvider)

@@ -1,0 +1,17 @@
+{
+  "customerId": 123,
+  "deliveries": [
+    {
+      "id": 1,
+      "addressOfDelivery": 1
+    },
+    {
+      "id": 2,
+      "addressOfDelivery": 1
+    },
+    {
+      "id": 3,
+      "addressOfDelivery": 1
+    }
+  ]
+}

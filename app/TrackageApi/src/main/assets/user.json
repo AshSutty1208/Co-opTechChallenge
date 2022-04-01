@@ -1,0 +1,16 @@
+{
+  "id": 123,
+  "nameOnAccount": "Ashley Sutton",
+  "email": "ashley.suttondev@outlook.com",
+  "phoneNumber": "07625351678",
+  "addresses": [{
+    "id": 1,
+    "primary": true,
+    "name": "Home",
+    "addressLine1": "32 Higginsbottom way",
+    "addressLine2": "",
+    "postcode": "ST35YT"
+  }],
+  "safeLocation": "In My Hands",
+  "qr": "1f90d9c0-e6f9-4c60-9df6-2c5993becc1a"
+}
