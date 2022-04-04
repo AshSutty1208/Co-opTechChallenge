@@ -45,25 +45,25 @@ class CharacterChangeViewModel @Inject constructor(private val trackageRepositor
 
         viewModelScope.launch {
             withContext(dispatcher.io()) {
-                val response = trackageRepository.getRandomJoke(textInputSplit[0], textInputSplit[1])
-
-                withContext(dispatcher.main()) {
-                    when (response.status) {
-                        Resource.Status.SUCCESS -> {
-                            dialogState.value = true
-                            dialogText.value = response.data?.value?.joke
-                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
-                        }
-                        Resource.Status.ERROR -> {
-                            dialogState.value = true
-                            dialogText.value = response.message
-                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
-                        }
-                        Resource.Status.LOADING -> {
-                            //Do nothing
-                        }
-                    }
-                }
+//                val response = trackageRepository.getRandomJoke(textInputSplit[0], textInputSplit[1])
+//
+//                withContext(dispatcher.main()) {
+//                    when (response.status) {
+//                        Resource.Status.SUCCESS -> {
+//                            dialogState.value = true
+//                            dialogText.value = response.data?.value?.joke
+//                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
+//                        }
+//                        Resource.Status.ERROR -> {
+//                            dialogState.value = true
+//                            dialogText.value = response.message
+//                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
+//                        }
+//                        Resource.Status.LOADING -> {
+//                            //Do nothing
+//                        }
+//                    }
+//                }
             }
         }
     }

@@ -7,6 +7,7 @@ import com.trackage.app.trackage_api.repository.TrackageRepository
 import com.trackage.app.trackage_api.utils.Resource
 import com.trackage.app.util.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,35 +22,23 @@ class MainViewModel @Inject constructor(private val trackageRepository: Trackage
     var dialogText = MutableLiveData("")
         private set
 
-    /**
-     * Fetches a random joke from the api then sets the dialogState to true (To make it visible)
-     * Also sets the dialogs text to the random joke
-     *
-     * There is 100% a better way of doing this but I am not sure what it is
-     *
-     * Both of these sets make the views recompose
-     */
-    fun fetchRandomJoke() {
+    var userLoggedIn = MutableLiveData(false)
+        private set
+
+    var loginLoading = MutableLiveData(false)
+        private set
+
+    fun loginUser() {
+        loginLoading.value = true
         viewModelScope.launch {
             withContext(dispatcher.io()) {
-                val response = trackageRepository.getRandomJoke()
+                // Artificial loading to fake api
+                delay(2000)
+                val user = trackageRepository.getUserDetails()
 
                 withContext(dispatcher.main()) {
-                    when(response.status) {
-                        Resource.Status.SUCCESS -> {
-                            dialogState.value = true
-                            dialogText.value = response.data?.value?.joke
-                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
-                        }
-                        Resource.Status.ERROR -> {
-                            dialogState.value = true
-                            dialogText.value = response.message
-                                ?: "THERE WAS AN ERROR GETTING A RANDOM JOKE"
-                        }
-                        Resource.Status.LOADING -> {
-                            //Do nothing
-                        }
-                    }
+                    loginLoading.value = false
+                    userLoggedIn.value = user
                 }
             }
         }

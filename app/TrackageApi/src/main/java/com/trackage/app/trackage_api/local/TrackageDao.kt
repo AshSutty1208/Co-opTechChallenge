@@ -14,6 +14,6 @@ interface TrackageDao {
     @Query("DELETE FROM users WHERE id = :id")
     fun deleteUser(id: Int)
 
-    @Query("SELECT 1 FROM users WHERE id = :id")
+    @Query("SELECT * FROM users WHERE id = :id")
     suspend fun getUser(id: Int): User
 }

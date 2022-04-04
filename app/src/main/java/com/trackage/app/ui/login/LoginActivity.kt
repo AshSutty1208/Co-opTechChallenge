@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.widget.ContentLoadingProgressBar
 import com.sutton.jokeapp.R
 import com.trackage.app.ui.MainViewModel
 import com.trackage.app.ui.custom.TrackageButton
@@ -42,21 +43,21 @@ class LoginActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    val dialogState by viewModel.dialogState.observeAsState()
+                    val loadingState by viewModel.loginLoading.observeAsState()
+                    val userLoggedIn by viewModel.userLoggedIn.observeAsState()
 
                     LoginUIContainer(onSignInButtonClick = {
-                        startActivity(Intent(this, HomeActivity::class.java))
+                       viewModel.loginUser()
                     }, onSignUpButtonClick = {
                         startActivity(Intent(this, SignUpActivity::class.java))
                     })
 
-                    if (dialogState == true) {
-                        JokeDialog(
-                            viewModel.dialogText.value ?: "",
-                            onDialogButtonPressed = {
-                                viewModel.dialogState.value = false
-                            }
-                        )
+                    if (loadingState == true) {
+                        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+                    }
+
+                    if (userLoggedIn == true) {
+                        startActivity(Intent(this, HomeActivity::class.java))
                     }
                 }
             }

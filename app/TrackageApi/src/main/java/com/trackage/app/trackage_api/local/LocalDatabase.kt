@@ -10,7 +10,7 @@ import com.trackage.app.trackage_api.models.User
 @Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class LocalDatabase: RoomDatabase() {
 
-    abstract fun userDao(): UserDao
+    abstract fun trackageDao(): TrackageDao
 
     companion object {
         @Volatile private var instance: LocalDatabase? = null

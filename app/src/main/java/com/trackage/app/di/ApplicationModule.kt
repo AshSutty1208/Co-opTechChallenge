@@ -1,7 +1,12 @@
 package com.trackage.app.di
 
+import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.trackage.app.trackage_api.local.LocalDatabase
+import com.trackage.app.trackage_api.local.TrackageDao
+import com.trackage.app.trackage_api.local.TrackageLocalDataSource
 import com.trackage.app.trackage_api.remote.TrackageRemoteDataSource
 import com.trackage.app.trackage_api.remote.TrackageService
 import com.trackage.app.trackage_api.repository.TrackageRepository
@@ -10,6 +15,7 @@ import com.trackage.app.util.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -34,16 +40,28 @@ object ApplicationModule {
     @Provides
     fun provideGson(): Gson = GsonBuilder().create()
 
+    @Singleton
     @Provides
-    fun provideJokeService(retrofit: Retrofit): TrackageService = retrofit.create(TrackageService::class.java)
+    fun provideAppDatabase(@ApplicationContext appContext: Context): LocalDatabase {
+        return Room.databaseBuilder(appContext, LocalDatabase::class.java, "trackage")
+            .build()
+    }
+
+    @Provides
+    fun provideTrackageService(retrofit: Retrofit): TrackageService = retrofit.create(TrackageService::class.java)
 
     @Singleton
     @Provides
-    fun provideJokeRemoteDataSource(trackageService: TrackageService) = TrackageRemoteDataSource(trackageService)
+    fun provideTrackageLocalDataSource(localDatabase: LocalDatabase) = TrackageLocalDataSource(localDatabase)
 
     @Singleton
     @Provides
-    fun provideRepository(remoteDataSource: TrackageRemoteDataSource) = TrackageRepository(remoteDataSource)
+    fun provideTrackageRemoteDataSource(trackageService: TrackageService) = TrackageRemoteDataSource(trackageService)
+
+    @Singleton
+    @Provides
+    fun provideRepository(remoteDataSource: TrackageRemoteDataSource,
+                          localDataSource: TrackageLocalDataSource) = TrackageRepository(remoteDataSource, localDataSource)
 
     @Singleton
     @Provides

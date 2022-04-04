@@ -10,6 +10,7 @@ import com.trackage.app.trackage_api.testing.OpenForTesting
 import com.trackage.app.trackage_api.utils.Resource
 import com.trackage.app.trackage_api.utils.Resource.*
 import java.io.FileReader
+import java.lang.Exception
 import javax.inject.Inject
 
 @OpenForTesting
@@ -17,10 +18,17 @@ class TrackageRepository @Inject constructor(
     private val remoteDataSource: TrackageRemoteDataSource,
     private val localDataSource: TrackageLocalDataSource
 ) {
-    suspend fun getUserDetails(): User {
-        val user = getUserDetailsFromFile()
-        localDataSource.insertUserDetails(user)
-        return user
+    /**
+     * Returns true or false based on if the user has successfully logged in
+     */
+    suspend fun getUserDetails(): Boolean {
+        return try {
+            val user = getUserDetailsFromFile()
+            localDataSource.insertUserDetails(user)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     suspend fun getUserDeliveries() : Resource<Deliveries> {

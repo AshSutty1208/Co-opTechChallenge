@@ -12,12 +12,12 @@ import javax.inject.Inject
  */
 @OpenForTesting
 class TrackageLocalDataSource @Inject constructor(
-    private val trackageDao: TrackageDao
+    private val localDatabase: LocalDatabase
     ): BaseDataSource() {
 
     suspend fun getUserDetails(): User {
-        return trackageDao.getUser(1)
+        return localDatabase.trackageDao().getUser(1)
     }
 
-    suspend fun insertUserDetails(user: User) = trackageDao.insertUser(user)
+    suspend fun insertUserDetails(user: User) = localDatabase.trackageDao().insertUser(user)
 }
