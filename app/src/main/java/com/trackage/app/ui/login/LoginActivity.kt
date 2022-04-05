@@ -31,6 +31,8 @@ import com.trackage.app.ui.home.HomeActivity
 import com.trackage.app.ui.sign_up.SignUpActivity
 import com.trackage.app.ui.theme.AppTheme
 import com.trackage.app.ui.theme.TrackagePrimary
+import com.trackage.app.ui.theme.TrackageSecondary
+import com.trackage.app.ui.theme.TrackageSecondaryVariant
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,13 +49,20 @@ class LoginActivity : ComponentActivity() {
                     val userLoggedIn by viewModel.userLoggedIn.observeAsState()
 
                     LoginUIContainer(onSignInButtonClick = {
-                       viewModel.loginUser()
+                       viewModel.loginUser(resources.assets.open("user.json"))
                     }, onSignUpButtonClick = {
                         startActivity(Intent(this, SignUpActivity::class.java))
                     })
 
                     if (loadingState == true) {
-                        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Card(
+                                Modifier
+                                    .width(100.dp)
+                                    .height(100.dp), backgroundColor = TrackageSecondaryVariant) {
+                                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                            }
+                        }
                     }
 
                     if (userLoggedIn == true) {

@@ -40,9 +40,21 @@
         </activity>
 
         <activity
-            android:name="com.trackage.app.ui.profile.ProfileActivity"
+            android:name="com.trackage.app.ui.deliveries.ProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Trackage.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.delivery_preferences.DeliveryPreferencesActivity"
             android:exported="true"
             android:theme="@style/Theme.Trackage.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.qr_code.QRCodeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Trackage.NoActionBar">
         </activity>
     </application>
 

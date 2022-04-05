@@ -3,6 +3,7 @@ package com.trackage.app.trackage_api.local
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.trackage.app.trackage_api.BaseDataSource
+import com.trackage.app.trackage_api.models.Deliveries
 import com.trackage.app.trackage_api.models.User
 import com.trackage.app.trackage_api.testing.OpenForTesting
 import javax.inject.Inject
@@ -16,8 +17,14 @@ class TrackageLocalDataSource @Inject constructor(
     ): BaseDataSource() {
 
     suspend fun getUserDetails(): User {
-        return localDatabase.trackageDao().getUser(1)
+        return localDatabase.trackageDao().getUser(123)
     }
 
-    suspend fun insertUserDetails(user: User) = localDatabase.trackageDao().insertUser(user)
+    fun insertUserDetails(user: User) = localDatabase.trackageDao().insertUser(user)
+
+    suspend fun getDeliveriesForUser(): User {
+        return localDatabase.trackageDao().getUserDeliveries(123)
+    }
+
+    fun insertUserDeliveries(deliveries: Deliveries) = localDatabase.trackageDao().insertDeliveries(deliveries)
 }

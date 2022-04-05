@@ -6,9 +6,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "deliveries")
-data class Deliveries(@PrimaryKey val id: Int,
-                      @SerializedName("nameOnAccount") @Expose val deliveries: List<Delivery>)
+data class Deliveries(@PrimaryKey val customerId: Int,
+                      @SerializedName("deliveries") @Expose val deliveries: List<Delivery>)
 
 
-data class Delivery(val id: Int,
-                    @SerializedName("nameOnAccount") @Expose val addressOnDelivery: Int)
+data class Delivery(@PrimaryKey val id: Int,
+                    @SerializedName("addressOfDelivery") @Expose val addressOfDelivery: Int)

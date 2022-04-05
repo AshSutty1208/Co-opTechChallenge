@@ -1,6 +1,8 @@
-package com.trackage.app.ui.profile
+package com.trackage.app.ui.qr_code
 
 import android.os.Bundle
+import androidmads.library.qrgenearator.QRGContents
+import androidmads.library.qrgenearator.QRGEncoder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -8,10 +10,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +33,7 @@ import com.trackage.app.ui.theme.TrackagePrimary
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileActivity : ComponentActivity() {
+class QRCodeActivity: ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +42,7 @@ class ProfileActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    com.trackage.app.ui.deliveries.DeliveriesUIContainer(onEditButtonClick = {})
+                    QRCodeUIContainer(onEditButtonClick = {})
                 }
             }
         }
@@ -43,7 +50,7 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
+fun QRCodeUIContainer(onEditButtonClick: () -> Unit) {
     var nameOnAccountText by remember { mutableStateOf("") }
     var emailAddressText by remember { mutableStateOf("") }
     var phoneNumberText by remember { mutableStateOf("") }
@@ -66,66 +73,25 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 
         // Sign in text
         Row(Modifier.fillMaxWidth()) {
-            TrackageTextViewHeader(text = "Your Profile",
+            TrackageTextViewHeader(text = "Your QR Code",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp, top = 16.dp))
         }
-        
+
         // Profile Container
         Row(modifier = Modifier.fillMaxWidth()
             , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             Box {
-                OutlinedTextField(
-                    value = "Ashley Sutton",
-                    onValueChange = { nameOnAccountText = it },
-                    label = { Text("Name On Account") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.padding(end = 16.dp, start = 8.dp),
-                    enabled = false
-                )
-            }
-        }
-
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
-            , verticalAlignment = Alignment.CenterVertically,  horizontalArrangement = Arrangement.Center) {
-            Box(Modifier.padding(end = 16.dp, start = 8.dp)) {
-                OutlinedTextField(
-                    value = "ashley.suttondev@outlook.com",
-                    onValueChange = { emailAddressText = it },
-                    label = { Text("Email Address") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    enabled = false
-                )
-            }
-        }
-
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 16.dp)
-            , verticalAlignment = Alignment.CenterVertically,  horizontalArrangement = Arrangement.Center) {
-            Box(Modifier.padding(end = 16.dp, start = 8.dp)) {
-                OutlinedTextField(
-                    value = "077828394012",
-                    onValueChange = { phoneNumberText = it },
-                    label = { Text("Phone Number") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    enabled = false
-                )
-            }
-        }
-
-
-
-        //Login Buttons
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                TrackageButton("Edit", onClickListener = onEditButtonClick)
+                val qrgEncoder = QRGEncoder("sssasdadasdasdasdadsasdada", null, QRGContents.Type.TEXT, 150)
+                Image(painter = BitmapPainter(qrgEncoder.encodeAsBitmap().asImageBitmap()),
+                    contentDescription = "Your QR code",
+                    alignment = Alignment.Center,
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth()
+                        .height(350.dp))
             }
         }
     }
@@ -135,6 +101,6 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        com.trackage.app.ui.deliveries.DeliveriesUIContainer({})
+        QRCodeUIContainer({})
     }
 }

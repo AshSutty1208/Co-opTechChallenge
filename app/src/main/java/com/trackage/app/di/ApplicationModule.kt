@@ -44,6 +44,7 @@ object ApplicationModule {
     @Provides
     fun provideAppDatabase(@ApplicationContext appContext: Context): LocalDatabase {
         return Room.databaseBuilder(appContext, LocalDatabase::class.java, "trackage")
+            .fallbackToDestructiveMigration()
             .build()
     }
 

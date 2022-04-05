@@ -1,5 +1,6 @@
 package com.trackage.app.trackage_api.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import com.trackage.app.trackage_api.local.TrackageLocalDataSource
@@ -7,9 +8,8 @@ import com.trackage.app.trackage_api.models.Deliveries
 import com.trackage.app.trackage_api.models.User
 import com.trackage.app.trackage_api.remote.TrackageRemoteDataSource
 import com.trackage.app.trackage_api.testing.OpenForTesting
-import com.trackage.app.trackage_api.utils.Resource
-import com.trackage.app.trackage_api.utils.Resource.*
-import java.io.FileReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -21,53 +21,68 @@ class TrackageRepository @Inject constructor(
     /**
      * Returns true or false based on if the user has successfully logged in
      */
-    suspend fun getUserDetails(): Boolean {
+    suspend fun putUserDetails(inputStream: InputStream): Boolean {
         return try {
-            val user = getUserDetailsFromFile()
+            val user = getUserDetailsFromFile(inputStream)
             localDataSource.insertUserDetails(user)
             true
         } catch (e: Exception) {
+            Log.e("Exception", e.message ?: "Null")
             false
         }
     }
 
-    suspend fun getUserDeliveries() : Resource<Deliveries> {
-        val responseStatus = remoteDataSource.getUserDeliveries()
-        return handleGet(responseStatus)
+    suspend fun getUserDetails(): User? {
+        return try {
+            localDataSource.getUserDetails()
+        } catch (e: Exception) {
+            Log.e("Exception", e.message ?: "Null")
+            null
+        }
     }
 
-    private fun getUserDetailsFromFile(): User {
+    suspend fun putUserDeliveries(inputStream: InputStream): Boolean {
+        return try {
+            val deliveries = getUserDeliveriesFromFile(inputStream)
+            localDataSource.insertUserDeliveries(deliveries)
+            true
+        } catch (e: Exception) {
+            Log.e("Exception", e.message ?: "Null")
+            false
+        }
+    }
+
+    private fun getUserDetailsFromFile(inputStream: InputStream): User {
         // create Gson instance
         val gson = Gson()
 
         // create a reader
-        val reader = JsonReader(FileReader("$USER.json"))
+        val reader = JsonReader(InputStreamReader(inputStream))
 
         // convert JSON file to User
         val user: User = gson.fromJson(reader, User::class.java)
 
         // close reader
         reader.close()
+        inputStream.close()
 
         return user
     }
 
-    private fun <T> handleGet(resource: Resource<T>) : Resource<T> {
-        return if (resource.status == Status.SUCCESS) {
-            if (resource.data != null) {
-                resource
-            } else {
-                Resource.error("Response Data was null in TrackageRepository")
-            }
-        } else if (resource.status == Status.ERROR) {
-            Resource.error(resource.message ?: "Error Message Null")
-        } else {
-            Resource.error("Unknown Status in TrackageRepository")
-        }
-    }
+    private fun getUserDeliveriesFromFile(inputStream: InputStream): Deliveries {
+        // create Gson instance
+        val gson = Gson()
 
-    companion object {
-        const val USER = "user"
-        const val DELIVERIES = "deliveries"
+        // create a reader
+        val reader = JsonReader(InputStreamReader(inputStream))
+
+        // convert JSON file to User
+        val deliveries: Deliveries = gson.fromJson(reader, Deliveries::class.java)
+
+        // close reader
+        reader.close()
+        inputStream.close()
+
+        return deliveries
     }
 }

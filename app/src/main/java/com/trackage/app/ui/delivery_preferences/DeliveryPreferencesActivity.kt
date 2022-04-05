@@ -1,4 +1,4 @@
-package com.trackage.app.ui.profile
+package com.trackage.app.ui.delivery_preferences
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,17 +17,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sutton.jokeapp.R
-import com.trackage.app.ui.MainViewModel
-import com.trackage.app.ui.custom.TrackageButton
 import com.trackage.app.ui.custom.TrackageTextViewHeader
 import com.trackage.app.ui.theme.AppTheme
-import com.trackage.app.ui.theme.TrackagePrimary
+import com.trackage.app.ui.theme.TrackageSecondary
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
+class DeliveryPreferencesActivity : ComponentActivity() {
+    private val viewModel: DeliveryPreferencesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,8 @@ class ProfileActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    com.trackage.app.ui.deliveries.DeliveriesUIContainer(onEditButtonClick = {})
+                    viewModel.populateData()
+                    DeliveryPreferencesUIContainer(viewModel)
                 }
             }
         }
@@ -43,10 +43,9 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
-    var nameOnAccountText by remember { mutableStateOf("") }
-    var emailAddressText by remember { mutableStateOf("") }
-    var phoneNumberText by remember { mutableStateOf("") }
+fun DeliveryPreferencesUIContainer(viewModel: DeliveryPreferencesViewModel) {
+    var primaryAddressText by remember { viewModel.primaryAddress }
+    var postCodeText by remember { viewModel.postCode }
 
     Column {
         //Trackage Logo
@@ -54,8 +53,8 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
             Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(color = TrackagePrimary)) {
-            Image(painter = painterResource(id = R.drawable.trackage_logo),
+                .background(color = TrackageSecondary)) {
+            Image(painter = painterResource(id = R.drawable.trackage_logo_purple),
                 contentDescription = "Trackage logo",
                 alignment = Alignment.Center,
                 modifier = Modifier
@@ -66,7 +65,7 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 
         // Sign in text
         Row(Modifier.fillMaxWidth()) {
-            TrackageTextViewHeader(text = "Your Profile",
+            TrackageTextViewHeader(text = "Delivery Preferences",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,9 +77,9 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
             , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             Box {
                 OutlinedTextField(
-                    value = "Ashley Sutton",
-                    onValueChange = { nameOnAccountText = it },
-                    label = { Text("Name On Account") },
+                    value = primaryAddressText,
+                    onValueChange = { primaryAddressText = it },
+                    label = { Text("My Primary Address") },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.padding(end = 16.dp, start = 8.dp),
                     enabled = false
@@ -88,46 +87,35 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp)
             , verticalAlignment = Alignment.CenterVertically,  horizontalArrangement = Arrangement.Center) {
             Box(Modifier.padding(end = 16.dp, start = 8.dp)) {
                 OutlinedTextField(
-                    value = "ashley.suttondev@outlook.com",
-                    onValueChange = { emailAddressText = it },
-                    label = { Text("Email Address") },
+                    value = postCodeText,
+                    onValueChange = { postCodeText = it },
+                    label = { Text("Post Code") },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     enabled = false
                 )
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 16.dp)
-            , verticalAlignment = Alignment.CenterVertically,  horizontalArrangement = Arrangement.Center) {
-            Box(Modifier.padding(end = 16.dp, start = 8.dp)) {
-                OutlinedTextField(
-                    value = "077828394012",
-                    onValueChange = { phoneNumberText = it },
-                    label = { Text("Phone Number") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    enabled = false
-                )
-            }
-        }
-
-
-
-        //Login Buttons
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                TrackageButton("Edit", onClickListener = onEditButtonClick)
-            }
-        }
+//        Row(modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(top = 16.dp, bottom = 16.dp)
+//            , verticalAlignment = Alignment.CenterVertically,  horizontalArrangement = Arrangement.Center) {
+//            Box(Modifier.padding(end = 16.dp, start = 8.dp)) {
+//                OutlinedTextField(
+//                    value = "077828394012",
+//                    onValueChange = { safeLocationText = it },
+//                    label = { Text("Phone Number") },
+//                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+//                    enabled = false
+//                )
+//            }
+//        }
     }
 }
 
@@ -135,6 +123,6 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        com.trackage.app.ui.deliveries.DeliveriesUIContainer({})
+        DeliveryPreferencesUIContainer(viewModel())
     }
 }

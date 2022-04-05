@@ -1,4 +1,4 @@
-package com.trackage.app.ui.profile
+package com.trackage.app.ui.deliveries
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,11 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +28,7 @@ import com.trackage.app.ui.theme.TrackagePrimary
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileActivity : ComponentActivity() {
+class DeliveriesActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +37,7 @@ class ProfileActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    com.trackage.app.ui.deliveries.DeliveriesUIContainer(onEditButtonClick = {})
+                    DeliveriesUIContainer(onEditButtonClick = {})
                 }
             }
         }
@@ -43,7 +45,7 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
+fun DeliveriesUIContainer(onEditButtonClick: () -> Unit) {
     var nameOnAccountText by remember { mutableStateOf("") }
     var emailAddressText by remember { mutableStateOf("") }
     var phoneNumberText by remember { mutableStateOf("") }
@@ -72,19 +74,19 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(bottom = 24.dp, top = 16.dp))
         }
-        
+
         // Profile Container
         Row(modifier = Modifier.fillMaxWidth()
             , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-            Box {
-                OutlinedTextField(
-                    value = "Ashley Sutton",
-                    onValueChange = { nameOnAccountText = it },
-                    label = { Text("Name On Account") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.padding(end = 16.dp, start = 8.dp),
-                    enabled = false
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .testTag("timersList")
+            ) {
+                items(viewModel.timers) { delivery ->
+                    Divider()
+                }
             }
         }
 
@@ -135,6 +137,6 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        com.trackage.app.ui.deliveries.DeliveriesUIContainer({})
+        DeliveriesUIContainer({})
     }
 }
