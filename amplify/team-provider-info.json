@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-trackageamplifyapp-dev-215007-authRole",
+      "UnauthRoleArn": "arn:aws:iam::440103759588:role/amplify-trackageamplifyapp-dev-215007-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::440103759588:role/amplify-trackageamplifyapp-dev-215007-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-trackageamplifyapp-dev-215007-deployment",
+      "UnauthRoleName": "amplify-trackageamplifyapp-dev-215007-unauthRole",
+      "StackName": "amplify-trackageamplifyapp-dev-215007",
+      "StackId": "arn:aws:cloudformation:eu-west-2:440103759588:stack/amplify-trackageamplifyapp-dev-215007/8fa24b10-fa48-11ec-9d2b-02aeb060123c",
+      "AmplifyAppId": "d2eed8jto9avrm"
+    },
+    "categories": {
+      "auth": {
+        "trackageamplifyapp582df65d": {}
+      }
+    }
+  }
+}

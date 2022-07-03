@@ -20,8 +20,9 @@ import com.sutton.jokeapp.R
 import com.trackage.app.ui.MainViewModel
 import com.trackage.app.ui.custom.TrackageTextViewHeader
 import com.trackage.app.ui.custom.TrackageWideButton
+import com.trackage.app.ui.deliveries.DeliveriesActivity
 import com.trackage.app.ui.delivery_preferences.DeliveryPreferencesActivity
-import com.trackage.app.ui.deliveries.ProfileActivity
+import com.trackage.app.ui.profile.ProfileActivity
 import com.trackage.app.ui.qr_code.QRCodeActivity
 import com.trackage.app.ui.theme.AppTheme
 import com.trackage.app.ui.theme.TrackageSecondary
@@ -38,7 +39,7 @@ class HomeActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     HomeUIContainer(onYourDeliveriesButtonClick = {
-
+                        startActivity(Intent(this, DeliveriesActivity::class.java))
                     }, onDeliveryPreferencesButtonClick = {
                         startActivity(Intent(this, DeliveryPreferencesActivity::class.java))
                     }, onYourProfileButtonClick = {

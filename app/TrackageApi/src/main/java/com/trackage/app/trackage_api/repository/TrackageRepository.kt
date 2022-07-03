@@ -18,10 +18,18 @@ class TrackageRepository @Inject constructor(
     private val remoteDataSource: TrackageRemoteDataSource,
     private val localDataSource: TrackageLocalDataSource
 ) {
+    fun signupUser(email: String, password: String) {
+        try {
+            remoteDataSource.signUpUser(email, password)
+        } catch (e: Exception) {
+            Log.e("Sign Up User Exception", e.message ?: "Null")
+        }
+    }
+
     /**
      * Returns true or false based on if the user has successfully logged in
      */
-    suspend fun putUserDetails(inputStream: InputStream): Boolean {
+    fun putUserDetails(inputStream: InputStream): Boolean {
         return try {
             val user = getUserDetailsFromFile(inputStream)
             localDataSource.insertUserDetails(user)
@@ -41,7 +49,16 @@ class TrackageRepository @Inject constructor(
         }
     }
 
-    suspend fun putUserDeliveries(inputStream: InputStream): Boolean {
+    suspend fun getUserDeliveries(): Deliveries? {
+        return try {
+            localDataSource.getDeliveriesForUser()
+        } catch (e: Exception) {
+            Log.e("Exception", e.message ?: "Null")
+            null
+        }
+    }
+
+    fun putUserDeliveries(inputStream: InputStream): Boolean {
         return try {
             val deliveries = getUserDeliveriesFromFile(inputStream)
             localDataSource.insertUserDeliveries(deliveries)

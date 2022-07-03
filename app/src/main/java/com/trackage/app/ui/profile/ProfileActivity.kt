@@ -35,7 +35,7 @@ class ProfileActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    com.trackage.app.ui.deliveries.DeliveriesUIContainer(onEditButtonClick = {})
+                    ProfileUIContainer(onEditButtonClick = {})
                 }
             }
         }
@@ -135,6 +135,6 @@ fun ProfileUIContainer(onEditButtonClick: () -> Unit) {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        com.trackage.app.ui.deliveries.DeliveriesUIContainer({})
+        ProfileUIContainer({})
     }
 }

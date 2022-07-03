@@ -22,7 +22,7 @@ class TrackageLocalDataSource @Inject constructor(
 
     fun insertUserDetails(user: User) = localDatabase.trackageDao().insertUser(user)
 
-    suspend fun getDeliveriesForUser(): User {
+    suspend fun getDeliveriesForUser(): Deliveries {
         return localDatabase.trackageDao().getUserDeliveries(123)
     }
 

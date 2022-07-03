@@ -21,6 +21,6 @@ interface TrackageDao {
     @Query("SELECT * FROM users WHERE id = :id")
     suspend fun getUser(id: Int): User
 
-    @Query("SELECT * FROM deliveries WHERE id = :id")
-    suspend fun getUserDeliveries(id: Int): User
+    @Query("SELECT * FROM deliveries WHERE customerId = :id")
+    suspend fun getUserDeliveries(id: Int): Deliveries
 }

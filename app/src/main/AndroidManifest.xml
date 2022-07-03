@@ -22,12 +22,6 @@
         </activity>
 
         <activity
-            android:name="com.trackage.app.ui.character_change.CharacterChangeActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Trackage.Light.NoActionBar">
-        </activity>
-
-        <activity
             android:name="com.trackage.app.ui.sign_up.SignUpActivity"
             android:exported="true"
             android:theme="@style/Theme.Trackage.NoActionBar">
@@ -40,7 +34,7 @@
         </activity>
 
         <activity
-            android:name="com.trackage.app.ui.deliveries.ProfileActivity"
+            android:name="com.trackage.app.ui.profile.ProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.Trackage.NoActionBar">
         </activity>
@@ -53,6 +47,12 @@
 
         <activity
             android:name="com.trackage.app.ui.qr_code.QRCodeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Trackage.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.trackage.app.ui.deliveries.DeliveriesActivity"
             android:exported="true"
             android:theme="@style/Theme.Trackage.NoActionBar">
         </activity>

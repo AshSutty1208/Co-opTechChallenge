@@ -2,6 +2,7 @@ package com.trackage.app.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.widget.ContentLoadingProgressBar
+import com.amplifyframework.core.Amplify
 import com.sutton.jokeapp.R
 import com.trackage.app.ui.MainViewModel
 import com.trackage.app.ui.custom.TrackageButton
@@ -49,7 +51,8 @@ class LoginActivity : ComponentActivity() {
                     val userLoggedIn by viewModel.userLoggedIn.observeAsState()
 
                     LoginUIContainer(onSignInButtonClick = {
-                       viewModel.loginUser(resources.assets.open("user.json"))
+                       viewModel.loginUser(resources.assets.open("user.json"),
+                           resources.assets.open("deliveries.json"))
                     }, onSignUpButtonClick = {
                         startActivity(Intent(this, SignUpActivity::class.java))
                     })

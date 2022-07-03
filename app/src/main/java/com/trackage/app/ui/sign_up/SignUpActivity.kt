@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,10 +37,14 @@ class SignUpActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
+                val loadingState by viewModel.loginLoading.observeAsState()
+                val userLoggedIn by viewModel.userLoggedIn.observeAsState()
+
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-
-                    SignUpUIContainer()
+                    SignUpUIContainer(signUpClicked = {
+                        viewModel.signupUser()
+                    })
                 }
             }
         }
@@ -46,7 +52,7 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignUpUIContainer() {
+fun SignUpUIContainer(signUpClicked: () -> Unit) {
     Column {
         //Trackage Logo
         Row(
@@ -79,11 +85,6 @@ fun SignUpUIContainer() {
 
         //Password Input
         Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
-            PostalAddressContainer(onValueChange = {})
-        }
-
-        //Password Input
-        Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
             PasswordContainer(onValueChange = {})
         }
 
@@ -96,7 +97,9 @@ fun SignUpUIContainer() {
             horizontalArrangement = Arrangement.Center
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                TrackageButton(stringResource(R.string.sign_up), onClickListener = {})
+                TrackageButton(stringResource(R.string.sign_up), onClickListener = {
+
+                })
             }
         }
     }
@@ -108,18 +111,6 @@ fun EmailContainer(onValueChange: (String) -> Unit) {
         OutlinedTextField(value = "",
             onValueChange = onValueChange,
             label = { Text("Email Address") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email)
-        )
-    }
-}
-
-@Composable
-fun PostalAddressContainer(onValueChange: (String) -> Unit) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(value = "",
-            onValueChange = onValueChange,
-            label = { Text("Enter Postal Address") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email)
         )
@@ -151,15 +142,6 @@ fun PreviewEmailInput() {
 fun PreviewPasswordInput() {
     AppTheme {
         PasswordContainer(onValueChange = {})
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPostalAddressInput() {
-    AppTheme {
-        PostalAddressContainer(onValueChange = {})
     }
 }
 
