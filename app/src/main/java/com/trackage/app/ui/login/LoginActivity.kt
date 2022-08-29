@@ -39,37 +39,41 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    val loadingState by viewModel.loginLoading.observeAsState()
-                    val userLoggedIn by viewModel.userLoggedIn.observeAsState()
+                val scaffoldState = rememberScaffoldState()
+                Scaffold(scaffoldState = scaffoldState) {
+                    Surface(color = MaterialTheme.colors.background) {
+                        // Store Login state
+                        val loginState = viewModel.loginState.value
 
-                    LoginUIContainer(onSignInButtonClick = {
-                       viewModel.loginUser(resources.assets.open("user.json"),
-                           resources.assets.open("deliveries.json"))
-                    }, onSignUpButtonClick = {
-                        startActivity(Intent(this, SignUpActivity::class.java))
-                    })
+                        //Create main Login UI Composable
+                        LoginUIContainer(onSignInButtonClick = {
+                            viewModel.loginUser()
+                        }, onSignUpButtonClick = {
+                            startActivity(Intent(this, SignUpActivity::class.java))
+                        }, loginState)
 
-                    if (loadingState == true) {
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                            Card(
-                                Modifier
-                                    .width(100.dp)
-                                    .height(100.dp), backgroundColor = TrackageSecondaryVariant) {
-                                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                        // Handle Login Loading (Show loading spinner)
+                        if (loginState.loginLoading) {
+                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                                Card(
+                                    Modifier
+                                        .width(100.dp)
+                                        .height(100.dp), backgroundColor = TrackageSecondaryVariant) {
+                                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                                }
                             }
                         }
-                    }
 
-                    if (userLoggedIn == true) {
-                        startActivity(Intent(this, HomeActivity::class.java))
+                        // Start HomeActivity if user has logged in
+                        if (loginState.isUserLoggedIn) {
+                            startActivity(Intent(this, HomeActivity::class.java))
+                        }
                     }
                 }
             }
@@ -79,52 +83,64 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginUIContainer(onSignInButtonClick: () -> Unit,
-                     onSignUpButtonClick: () -> Unit) {
-    var emailAddressText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
-
+                     onSignUpButtonClick: () -> Unit,
+                     loginState: LoginState) {
     Column {
         //Trackage Logo
         Row(
             Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .background(color = TrackagePrimary)) {
-            Image(painter = painterResource(id = R.drawable.trackage_logo),
+                .background(color = TrackagePrimary)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.trackage_logo),
                 contentDescription = "Trackage logo",
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .padding(36.dp)
                     .fillMaxWidth()
-                    .fillMaxHeight())
+                    .fillMaxHeight()
+            )
         }
 
         // Sign in text
         Row(Modifier.fillMaxWidth()) {
-            TrackageTextViewHeader(text = "Sign In",
+            TrackageTextViewHeader(
+                text = "Sign In",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp, top = 16.dp))
+                    .padding(bottom = 24.dp, top = 16.dp)
+            )
         }
 
         // Email Input
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(value = emailAddressText,
-                onValueChange = { emailAddressText = it },
+            OutlinedTextField(
+                value = loginState.userEmail,
+                onValueChange = {
+                    loginState.userEmail = it
+                    Log.e("USER_EMAIL_SET", loginState.userEmail)
+                                },
                 label = { Text("Email Address") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email)
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                )
             )
         }
 
         //Password Input
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(value = passwordText,
-                onValueChange = { passwordText = it },
+            OutlinedTextField(
+                value = loginState.userPassword,
+                onValueChange = { loginState.userPassword = it },
                 label = { Text("Password") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password)
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                )
             )
         }
 
@@ -137,7 +153,10 @@ fun LoginUIContainer(onSignInButtonClick: () -> Unit,
             horizontalArrangement = Arrangement.Center
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                TrackageButton(stringResource(R.string.sign_in), onClickListener = onSignInButtonClick)
+                TrackageButton(
+                    stringResource(R.string.sign_in),
+                    onClickListener = onSignInButtonClick
+                )
             }
         }
 
@@ -148,66 +167,25 @@ fun LoginUIContainer(onSignInButtonClick: () -> Unit,
                 .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)) {
-                TrackageButton(stringResource(R.string.sign_up), onClickListener = onSignUpButtonClick, true)
-            }
-        }
-    }
-}
-
-/**
- * Shows an AlertDialog with the given text
- *
- * NOTE: There is no preview for this as Google states in the docs AlertDialogs
- *       do not work with Preview
- */
-@Composable
-fun JokeDialog(dialogText: String,
-               onDialogDismissed: (() -> Unit)? = null,
-               onDialogButtonPressed: (() -> Unit)? = null) {
-    // We create these to remember the dialogs properties i.e. If it is visible
-    val rememberText = rememberSaveable {
-        mutableStateOf(dialogText)
-    }
-
-    AlertDialog(
-        onDismissRequest = {
-            onDialogDismissed?.invoke()
-        },
-        title = {
-        },
-        text = {
-            Column(modifier = Modifier
-                .fillMaxWidth()) {
-                Text(text = rememberText.value)
-            }
-        },
-        buttons = {
-            Row(
-                Modifier
+            Box(
+                contentAlignment = Alignment.Center, modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.background)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.Center
+                    .padding(top = 8.dp)
             ) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        onDialogButtonPressed?.invoke()
-                    }
-                ) {
-                }
+                TrackageButton(
+                    stringResource(R.string.sign_up),
+                    onClickListener = onSignUpButtonClick,
+                    true
+                )
             }
         }
-    )
+    }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        LoginUIContainer({}, {})
+        LoginUIContainer({}, {}, LoginState())
     }
 }

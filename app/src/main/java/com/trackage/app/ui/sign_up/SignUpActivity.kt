@@ -43,7 +43,7 @@ class SignUpActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     SignUpUIContainer(signUpClicked = {
-                        viewModel.signupUser()
+//                        viewModel.signupUser()
                     })
                 }
             }
@@ -149,6 +149,6 @@ fun PreviewPasswordInput() {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-        SignUpUIContainer()
+//        SignUpUIContainer()
     }
 }
