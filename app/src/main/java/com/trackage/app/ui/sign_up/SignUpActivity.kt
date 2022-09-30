@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -22,26 +23,39 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sutton.jokeapp.R
-import com.trackage.app.ui.MainViewModel
+import com.trackage.app.ui.BaseBottomSheetActivity
+import com.trackage.app.ui.custom.TFAPopupComposable
 import com.trackage.app.ui.custom.TrackageButton
 import com.trackage.app.ui.custom.TrackageTextViewHeader
 import com.trackage.app.ui.theme.AppTheme
 import com.trackage.app.ui.theme.TrackagePrimary
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 
+@OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
-class SignUpActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
+class SignUpActivity : BaseBottomSheetActivity() {
+    private val viewModel: SignUpViewModel by viewModels()
+    override lateinit var coroutineScope: CoroutineScope
+    override lateinit var scaffoldState: BottomSheetScaffoldState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                val loadingState by viewModel.loginLoading.observeAsState()
-                val userLoggedIn by viewModel.userLoggedIn.observeAsState()
+                scaffoldState = rememberBottomSheetScaffoldState()
+                coroutineScope = rememberCoroutineScope()
+//                val loadingState by viewModel.loginLoading.observeAsState()
 
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
+                // A scaffold container using the 'background' color from the theme
+                BottomSheetScaffold(scaffoldState = scaffoldState,
+                    contentColor = MaterialTheme.colors.background,
+                    sheetContent = {
+                        TFAPopupComposable({
+                            //TODO - call confirmSignUp
+                        })
+                    }
+                ) {
                     SignUpUIContainer(signUpClicked = {
 //                        viewModel.signupUser()
                     })
@@ -149,6 +163,6 @@ fun PreviewPasswordInput() {
 @Composable
 fun PreviewLoginUiContainer() {
     AppTheme {
-//        SignUpUIContainer()
+        SignUpUIContainer({})
     }
 }

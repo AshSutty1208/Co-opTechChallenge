@@ -65,7 +65,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // Amplify core dependency
-    implementation 'com.amplifyframework:core:1.36.1'
+    implementation 'com.amplifyframework:core-kotlin:0.21.2'
     implementation 'com.amplifyframework:aws-auth-cognito:1.36.1'
 
     // Support for Java 8 features

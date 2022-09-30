@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,57 +21,67 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.widget.ContentLoadingProgressBar
-import com.amplifyframework.core.Amplify
 import com.sutton.jokeapp.R
-import com.trackage.app.ui.MainViewModel
+import com.trackage.app.ui.BaseBottomSheetActivity
+import com.trackage.app.ui.custom.TFAPopupComposable
 import com.trackage.app.ui.custom.TrackageButton
 import com.trackage.app.ui.custom.TrackageTextViewHeader
 import com.trackage.app.ui.home.HomeActivity
 import com.trackage.app.ui.sign_up.SignUpActivity
 import com.trackage.app.ui.theme.AppTheme
 import com.trackage.app.ui.theme.TrackagePrimary
-import com.trackage.app.ui.theme.TrackageSecondary
 import com.trackage.app.ui.theme.TrackageSecondaryVariant
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
-class LoginActivity : ComponentActivity() {
+class LoginActivity : BaseBottomSheetActivity() {
     private val viewModel: LoginViewModel by viewModels()
+    override lateinit var coroutineScope: CoroutineScope
+    override lateinit var scaffoldState: BottomSheetScaffoldState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                val scaffoldState = rememberScaffoldState()
-                Scaffold(scaffoldState = scaffoldState) {
-                    Surface(color = MaterialTheme.colors.background) {
-                        // Store Login state
-                        val loginState = viewModel.loginState.value
+                scaffoldState = rememberBottomSheetScaffoldState()
+                coroutineScope = rememberCoroutineScope()
+                BottomSheetScaffold(scaffoldState = scaffoldState,
+                    contentColor = MaterialTheme.colors.background,
+                    sheetContent = {
+                        TFAPopupComposable({
+                            //TODO - call confirmSignUp
+                        })
+                    }, sheetPeekHeight = 0.dp) {
+                    // Store Login state
+                    val loginState = viewModel.loginState.value
 
-                        //Create main Login UI Composable
-                        LoginUIContainer(onSignInButtonClick = {
-                            viewModel.loginUser()
-                        }, onSignUpButtonClick = {
-                            startActivity(Intent(this, SignUpActivity::class.java))
-                        }, loginState)
+                    //Create main Login UI Composable
+                    LoginUIContainer(onSignInButtonClick = {
+                        viewModel.loginUser()
+                    }, onSignUpButtonClick = {
+                        startActivity(Intent(this, SignUpActivity::class.java))
+                    }, loginState)
 
-                        // Handle Login Loading (Show loading spinner)
-                        if (loginState.loginLoading) {
-                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                                Card(
-                                    Modifier
-                                        .width(100.dp)
-                                        .height(100.dp), backgroundColor = TrackageSecondaryVariant) {
-                                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                                }
+                    // Handle Login Loading (Show loading spinner)
+                    if (loginState.loginLoading) {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Card(
+                                Modifier
+                                    .width(100.dp)
+                                    .height(100.dp), backgroundColor = TrackageSecondaryVariant) {
+                                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                             }
                         }
+                    }
 
-                        // Start HomeActivity if user has logged in
-                        if (loginState.isUserLoggedIn) {
-                            startActivity(Intent(this, HomeActivity::class.java))
-                        }
+                    // Start HomeActivity if user has logged in
+                    if (loginState.isUserLoggedIn) {
+                        startActivity(Intent(this, HomeActivity::class.java))
                     }
                 }
             }

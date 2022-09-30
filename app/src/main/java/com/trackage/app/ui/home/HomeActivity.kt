@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sutton.jokeapp.R
-import com.trackage.app.ui.MainViewModel
 import com.trackage.app.ui.custom.TrackageTextViewHeader
 import com.trackage.app.ui.custom.TrackageWideButton
 import com.trackage.app.ui.deliveries.DeliveriesActivity
@@ -30,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

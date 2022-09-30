@@ -3,4 +3,5 @@
     <string name="login">login</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="authorize">Authorize</string>
 </resources>

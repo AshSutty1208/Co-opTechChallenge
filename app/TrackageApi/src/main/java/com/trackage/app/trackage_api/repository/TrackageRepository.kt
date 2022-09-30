@@ -1,6 +1,8 @@
 package com.trackage.app.trackage_api.repository
 
 import android.util.Log
+import com.amplifyframework.auth.result.AuthSignInResult
+import com.amplifyframework.auth.result.AuthSignUpResult
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import com.trackage.app.trackage_api.local.TrackageLocalDataSource
@@ -18,13 +20,9 @@ class TrackageRepository @Inject constructor(
     private val remoteDataSource: TrackageRemoteDataSource,
     private val localDataSource: TrackageLocalDataSource
 ) {
-    fun signupUser(email: String, password: String) {
-        try {
-            remoteDataSource.signUpUser(email, password)
-        } catch (e: Exception) {
-            Log.e("Sign Up User Exception", e.message ?: "Null")
-        }
-    }
+    suspend fun signupUser(email: String, password: String): AuthSignUpResult? = remoteDataSource.signUpUser(email, password)
+
+    suspend fun loginUser(email: String, password: String): AuthSignInResult? = remoteDataSource.loginUser(email, password)
 
     /**
      * Returns true or false based on if the user has successfully logged in
