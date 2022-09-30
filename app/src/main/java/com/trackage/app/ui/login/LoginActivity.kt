@@ -53,7 +53,8 @@ class LoginActivity : ComponentActivity() {
 
                         //Create main Login UI Composable
                         LoginUIContainer(onSignInButtonClick = {
-                            viewModel.loginUser()
+//                            viewModel.loginUser()
+                            startActivity(Intent(this, HomeActivity::class.java))
                         }, onSignUpButtonClick = {
                             startActivity(Intent(this, SignUpActivity::class.java))
                         }, loginState)
