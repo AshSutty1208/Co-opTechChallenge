@@ -132,17 +132,26 @@ fun DeliveriesList(deliveries: List<Delivery>) {
 
 @Composable
 fun DeliveriesHeader() {
-    Row(Modifier.fillMaxSize().padding(bottom = 8.dp).background(TrackageSecondaryVariant)) {
-        Column(Modifier.weight(0.3f)) {
-            Text(text = "Item Location", Modifier.fillMaxSize(), color = Color.White)
+    Row(Modifier.fillMaxSize().padding(bottom = 8.dp).background(Color.White)) {
+        Column(Modifier.weight(0.3f).padding(1.dp)) {
+            Text(text = "Location",
+                Modifier.fillMaxSize().background(TrackageSecondaryVariant).padding(4.dp),
+                color = Color.White,
+                textAlign = TextAlign.Center)
         }
 
-        Column(Modifier.weight(0.3f)) {
-            Text(text = "Delivered?", Modifier.fillMaxSize(), color = Color.White)
+        Column(Modifier.weight(0.3f).padding(1.dp)) {
+            Text(text = "Delivered?",
+                Modifier.fillMaxSize().background(TrackageSecondaryVariant).padding(4.dp),
+                color = Color.White,
+                textAlign = TextAlign.Center)
         }
 
-        Column(Modifier.weight(0.4f)) {
-            Text(text = "Deliveries", Modifier.fillMaxSize(), color = Color.White)
+        Column(Modifier.weight(0.4f).padding(1.dp)) {
+            Text(text = "Deliveries",
+                Modifier.fillMaxSize().background(TrackageSecondaryVariant).padding(4.dp),
+                color = Color.White,
+                textAlign = TextAlign.Center)
         }
     }
 }

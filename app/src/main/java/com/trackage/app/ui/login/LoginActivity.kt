@@ -40,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     private val viewModel: LoginViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +54,8 @@ class LoginActivity : ComponentActivity() {
 
                         //Create main Login UI Composable
                         LoginUIContainer(onSignInButtonClick = {
-//                            viewModel.loginUser()
+                            mainViewModel.loginUser(resources.assets.open("user.json"),
+                                resources.assets.open("deliveries.json"))
                             startActivity(Intent(this, HomeActivity::class.java))
                         }, onSignUpButtonClick = {
                             startActivity(Intent(this, SignUpActivity::class.java))
